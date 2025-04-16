@@ -20,3 +20,9 @@ Cистема предназначена для администрировани
 - Graphene (GraphQL для Python)
 - PostgreSQL
 - Vue JS
+
+
+## Запуск
+```
+python -m uvicorn app.main:app --reload
+```
