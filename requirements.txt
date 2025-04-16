@@ -1,0 +1,5 @@
+fastapi
+SQLAlchemy
+ariadne
+strawberry-graphql[fastapi]
+psycopg2
