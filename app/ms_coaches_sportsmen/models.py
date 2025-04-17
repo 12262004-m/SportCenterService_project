@@ -1,8 +1,6 @@
 from sqlalchemy import Column, Integer, String, Date, Enum
-from sqlalchemy.ext.declarative import declarative_base
+from app.database import Base
 from enum import Enum as PyEnum
-
-Base = declarative_base()
 
 
 class GenderEnum(PyEnum):
@@ -21,7 +19,6 @@ class Coach(Base):
     date_of_birth = Column(Date)
     qualification = Column(String)
     experience = Column(Integer)
-
 
 
 class Sportsman(Base):

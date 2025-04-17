@@ -1,10 +1,10 @@
 from fastapi import FastAPI
 from strawberry.fastapi import GraphQLRouter
-from .ms_coaches_sportsmen.schema import schema
+from app.schema import schema
 from app.database import engine
-from .ms_coaches_sportsmen import models
+from app.database import Base
 
-models.Base.metadata.create_all(bind=engine)
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 

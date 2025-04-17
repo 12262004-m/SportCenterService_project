@@ -7,9 +7,8 @@ from app.ms_coaches_sportsmen.enums import GenderEnum
 from app.ms_coaches_sportsmen.types import CoachType, SportsmanType
 
 
-
 @strawberry.type
-class Mutation:
+class CoachSportsmenMutation:
     @strawberry.mutation
     def create_coach(
             self,
@@ -84,16 +83,32 @@ class Mutation:
 
 
 @strawberry.type
-class Query:
+class CoachSportsmenQuery:
     @strawberry.field
-    def coaches(self) -> list[CoachType]:
+    def get_all_coaches(self) -> list[CoachType]:
         db: Session = next(get_db())
-        return [CoachType(**c.__dict__) for c in crud.get_coaches(db)]
+        return [CoachType(
+            id=coach.id,
+            last_name=coach.last_name,
+            first_name=coach.first_name,
+            middle_name=coach.middle_name,
+            gender=coach.gender,
+            date_of_birth=coach.date_of_birth,
+            qualification=coach.qualification,
+            experience=coach.experience
+        ) for coach in crud.get_coaches(db)]
 
     @strawberry.field
-    def athletes(self) -> list[SportsmanType]:
+    def get_all_athletes(self) -> list[SportsmanType]:
         db: Session = next(get_db())
-        return [SportsmanType(**a.__dict__) for a in crud.get_sportsmen(db)]
-
-
-schema = strawberry.Schema(query=Query, mutation=Mutation)
+        return [SportsmanType(
+            id=sportsman.id,
+            last_name=sportsman.last_name,
+            first_name=sportsman.first_name,
+            middle_name=sportsman.middle_name,
+            gender=sportsman.gender,
+            date_of_birth=sportsman.date_of_birth,
+            phone_number=sportsman.phone_number,
+            email=sportsman.email,
+            registration_date=sportsman.registration_date,
+        ) for sportsman in crud.get_sportsmen(db)]
