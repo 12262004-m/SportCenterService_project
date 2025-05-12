@@ -7,3 +7,9 @@ class SportType:
     name: str
     type: GraphQLSportTypeEnum
 
+@strawberry.type
+class SportHallType:
+    id: int
+    name: str
+    address: str
+    sports: list[SportType]

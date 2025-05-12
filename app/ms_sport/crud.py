@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from sqlalchemy.orm import Session
-from app.ms_sport.models import Sport
+from app.ms_sport.models import Sport, SportHall
 
 def create_sport(db: Session, sport_data: dict) -> Sport:
     sport = Sport(**sport_data)
@@ -36,5 +36,56 @@ def delete_sport(db: Session, sport_id: int) -> bool:
         raise Exception("Спорт не найден")
 
     db.delete(sport)
+    db.commit()
+    return True
+
+def create_sport_hall(db: Session, name: str, address: str, sport_ids: list[int]) -> SportHall:
+    sports = db.query(Sport).filter(Sport.id.in_(sport_ids)).all()
+
+    # Проверка на существующие виды спорта
+    found_ids = {sport.id for sport in sports}
+    missing_ids = set(sport_ids) - found_ids
+    if missing_ids:
+        raise Exception(f"Спорт(ы) с id {missing_ids} не найдены")
+
+    hall = SportHall(name=name, address=address, sports=sports)
+    db.add(hall)
+    db.commit()
+    db.refresh(hall)
+    return hall
+
+def get_all_sport_halls(db: Session) -> list[SportHall]:
+    return db.query(SportHall).all()
+
+def get_sport_hall_by_id(db: Session, hall_id: int) -> SportHall | None:
+    return db.query(SportHall).filter(SportHall.id == hall_id).first()
+
+def update_sport_hall(db: Session, hall_id: int, name: str | None = None, address: str | None = None, sport_ids: list[int] | None = None) -> SportHall:
+    hall = db.query(SportHall).filter(SportHall.id == hall_id).first()
+    if not hall:
+        raise Exception("Зал не найден")
+
+    if name is not None:
+        hall.name = name
+    if address is not None:
+        hall.address = address
+    if sport_ids is not None:
+        sports = db.query(Sport).filter(Sport.id.in_(sport_ids)).all()
+        found_ids = {sport.id for sport in sports}
+        missing_ids = set(sport_ids) - found_ids
+        if missing_ids:
+            raise Exception(f"Спорт(ы) с id {missing_ids} не найдены")
+        hall.sports = sports
+
+    db.commit()
+    db.refresh(hall)
+    return hall
+
+def delete_sport_hall(db: Session, hall_id: int) -> bool:
+    hall = db.query(SportHall).filter(SportHall.id == hall_id).first()
+    if not hall:
+        raise Exception("Зал не найден")
+
+    db.delete(hall)
     db.commit()
     return True
