@@ -1,7 +1,6 @@
 import strawberry
 from datetime import date
-from sqlalchemy.orm import Session
-from app.database import get_db
+from strawberry.types import Info
 from app.ms_coaches_sportsmen import crud
 from app.ms_coaches_sportsmen.enums import GenderEnum
 from app.ms_coaches_sportsmen.types import CoachType, SportsmanType
@@ -9,9 +8,10 @@ from app.ms_coaches_sportsmen.types import CoachType, SportsmanType
 
 @strawberry.type
 class CoachSportsmenMutation:
-    @strawberry.mutation
+    @strawberry.mutation()
     def create_coach(
             self,
+            info: Info,
             last_name: str,
             first_name: str,
             middle_name: str,
@@ -20,8 +20,7 @@ class CoachSportsmenMutation:
             qualification: str,
             experience: int,
     ) -> CoachType:
-        db: Session = next(get_db())
-
+        db = info.context["db"]
         coach_data = {
             "last_name": last_name,
             "first_name": first_name,
@@ -31,9 +30,7 @@ class CoachSportsmenMutation:
             "qualification": qualification,
             "experience": experience,
         }
-
         coach = crud.create_coach(db, coach_data)
-
         return CoachType(
             id=coach.id,
             last_name=coach.last_name,
@@ -45,9 +42,10 @@ class CoachSportsmenMutation:
             experience=coach.experience,
         )
 
-    @strawberry.mutation
+    @strawberry.mutation()
     def create_sportsman(
             self,
+            info: Info,
             last_name: str,
             first_name: str,
             middle_name: str,
@@ -57,7 +55,7 @@ class CoachSportsmenMutation:
             email: str,
             registration_date: date
     ) -> SportsmanType:
-        db: Session = next(get_db())
+        db = info.context["db"]
         sportsman = {
             "last_name": last_name,
             "first_name": first_name,
@@ -84,9 +82,9 @@ class CoachSportsmenMutation:
 
 @strawberry.type
 class CoachSportsmenQuery:
-    @strawberry.field
-    def get_all_coaches(self) -> list[CoachType]:
-        db: Session = next(get_db())
+    @strawberry.field()
+    def get_all_coaches(self, info: Info) -> list[CoachType]:
+        db = info.context["db"]
         return [CoachType(
             id=coach.id,
             last_name=coach.last_name,
@@ -98,9 +96,9 @@ class CoachSportsmenQuery:
             experience=coach.experience
         ) for coach in crud.get_coaches(db)]
 
-    @strawberry.field
-    def get_all_athletes(self) -> list[SportsmanType]:
-        db: Session = next(get_db())
+    @strawberry.field()
+    def get_all_sportsmen(self, info: Info) -> list[SportsmanType]:
+        db = info.context["db"]
         return [SportsmanType(
             id=sportsman.id,
             last_name=sportsman.last_name,

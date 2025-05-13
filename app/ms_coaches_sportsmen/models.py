@@ -1,6 +1,10 @@
 from sqlalchemy import Column, Integer, String, Date, Enum
+from sqlalchemy.orm import relationship
+
 from app.database import Base
 from enum import Enum as PyEnum
+
+from app.ms_sections.models import section_sportsman_association
 
 
 class GenderEnum(PyEnum):
@@ -33,3 +37,4 @@ class Sportsman(Base):
     phone_number = Column(String(11))
     email = Column(String, index=True)
     registration_date = Column(Date)
+    sections = relationship("SportSection", secondary=section_sportsman_association, back_populates="sportsmen")

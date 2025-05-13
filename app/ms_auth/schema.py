@@ -12,7 +12,7 @@ def hash_password(password: str) -> str:
 
 @strawberry.type
 class UserMutation:
-    @strawberry.mutation
+    @strawberry.mutation()
     def create_user(self, username: str, email: str, password: str) -> UserType:
         db: Session = next(get_db())
         user_data = {
@@ -26,7 +26,7 @@ class UserMutation:
 
 @strawberry.type
 class UserQuery:
-    @strawberry.field
+    @strawberry.field()
     def get_user_by_email(self, email: str) -> UserType:
         db: Session = next(get_db())
         user = crud.get_user(db, email)
@@ -34,7 +34,7 @@ class UserQuery:
             raise Exception("User not found")
         return UserType(id=user.id, username=user.username, email=user.email)
 
-    @strawberry.field
+    @strawberry.field()
     def get_all_users(self) -> list[UserType]:
         db: Session = next(get_db())
         return [UserType(id=c.id, username=c.username, email=c.email) for c in crud.get_users(db)]
