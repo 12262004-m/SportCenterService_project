@@ -1,15 +1,7 @@
-from sqlalchemy import Column, Integer, String, Date, Enum
+from sqlalchemy import Column, Integer, String, Date
 from sqlalchemy.orm import relationship
-
 from app.database import Base
-from enum import Enum as PyEnum
-
 from app.ms_sections.models import section_sportsman_association
-
-
-class GenderEnum(PyEnum):
-    MALE = "MALE"
-    FEMALE = "FEMALE"
 
 
 class Coach(Base):
@@ -19,7 +11,7 @@ class Coach(Base):
     last_name = Column(String, index=True)
     first_name = Column(String)
     middle_name = Column(String)
-    gender = Column(Enum(GenderEnum), nullable=False, index=True)  # Используем Enum с Python Enum
+    gender = Column(String, nullable=False)
     date_of_birth = Column(Date)
     qualification = Column(String)
     experience = Column(Integer)
@@ -32,7 +24,7 @@ class Sportsman(Base):
     last_name = Column(String, index=True)
     first_name = Column(String)
     middle_name = Column(String)
-    gender = Column(Enum(GenderEnum), nullable=False, index=True)
+    gender = Column(String, nullable=False)
     date_of_birth = Column(Date)
     phone_number = Column(String(11))
     email = Column(String, index=True)

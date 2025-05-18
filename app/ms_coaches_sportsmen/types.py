@@ -9,7 +9,7 @@ class CoachType:
     last_name: str
     first_name: str
     middle_name: str
-    gender: 'GenderEnum'
+    gender: GenderEnum
     date_of_birth: date
     qualification: str
     experience: int
@@ -21,7 +21,7 @@ class SportsmanType:
     last_name: str
     first_name: str
     middle_name: str
-    gender: 'GenderEnum'
+    gender: GenderEnum
     date_of_birth: date
     phone_number: str
     email: str

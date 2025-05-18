@@ -1,5 +1,9 @@
 from sqlalchemy.orm import Session
 from app.ms_auth.models import User
+from passlib.context import CryptContext
+
+
+pwd_context = CryptContext(schemes=['bcrypt'])
 
 
 def get_user(db: Session, user_email: str):
@@ -16,3 +20,11 @@ def create_user(db: Session, user_data: dict) -> User:
     db.commit()
     db.refresh(user)
     return user
+
+
+def hash_password(password: str) -> str:
+    return pwd_context.hash(password)
+
+
+def verify_password(password, hashed_password):
+    return pwd_context.verify(password, hashed_password)

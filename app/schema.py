@@ -3,14 +3,16 @@ from app.ms_coaches_sportsmen.schema import CoachSportsmenMutation, CoachSportsm
 from app.ms_auth.schema import UserMutation, UserQuery
 from app.ms_sport.schema import SportMutation, SportHallMutation, SportQuery, SportHallQuery
 from app.ms_sections.schema import SportSectionQuery, SportSectionMutation, SportSectionCoachesQuery, SportSectionCoachesMutation
+from app.ms_schedule.schema import ScheduleMutation
 
 
 @strawberry.type
 class Query(CoachSportsmenQuery, UserQuery, SportQuery, SportHallQuery, SportSectionQuery, SportSectionCoachesQuery):
     pass
 
+
 @strawberry.type
-class Mutation(CoachSportsmenMutation, UserMutation, SportMutation, SportHallMutation, SportSectionMutation, SportSectionCoachesMutation):
+class Mutation(CoachSportsmenMutation, UserMutation, SportMutation, SportHallMutation, SportSectionMutation, SportSectionCoachesMutation, ScheduleMutation):
     pass
 
 
