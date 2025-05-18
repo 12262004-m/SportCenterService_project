@@ -142,9 +142,9 @@ export default {
         const result = await response.json();
         if (result.errors) {
           console.error(result.errors);
-          alert("Ошибка на сервере при добавлении спортсмена");
+          alert("Ошибка при добавлении спортсмена");
         } else {
-          alert("Спортсмен добавлен!");
+          alert("Спортсмен добавлен");
           this.selectedSportsman[sectionId] = "";
           this.fetchSections();
         }

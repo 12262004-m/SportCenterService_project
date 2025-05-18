@@ -86,10 +86,7 @@ export default {
       return grouped;
     },
     maxRows() {
-      return Math.max(
-        ...Object.values(this.groupedSchedule).map((trainings) => trainings.length),
-        0
-      );
+      return Math.max(...Object.values(this.groupedSchedule).map((trainings) => trainings.length), 0);
     },
   },
   mounted() {

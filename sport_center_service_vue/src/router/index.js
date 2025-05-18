@@ -1,6 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import MainPage from '../pages/Main.vue'
 import LoginPage from '../pages/Login.vue'
+import SportsmenPage from '../pages/Sportsmen.vue'
+import SchedulePage from "../pages/Schedule.vue";
+import CoachesPage from "../pages/Coaches.vue";
+import SectionsPage from "../pages/Sections.vue";
 import RegistrationPage from "../pages/Registration.vue";
 
 const router = createRouter({
@@ -19,6 +23,21 @@ const router = createRouter({
       component: MainPage,
       meta: { requiresAuth: true } },
 
+    { path: '/sportsmen',
+      name: 'Sportsmen',
+      component: SportsmenPage },
+
+    { path: '/schedule',
+      name: 'Schedule',
+      component: SchedulePage },
+
+    { path: '/coaches',
+      name: 'Coaches',
+      component: CoachesPage },
+
+    { path: '/sections',
+      name: 'Sections',
+      component: SectionsPage }
   ],
 })
 

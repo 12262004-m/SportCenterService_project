@@ -6,7 +6,6 @@
       <router-link to="/sections">Секции</router-link>
       <router-link to="/sportsmen">Ученики</router-link>
       <router-link to="/coaches">Тренеры</router-link>
-      <router-link to="/reports">Отчет</router-link>
     </nav>
   </header>
 </template>
