@@ -6,7 +6,7 @@
         <div class="section-full-information">
           <h4>{{ section.title }} </h4>
           <p>Описание: {{ section.description }}</p>
-          <p>Тренер: {{ section.coach ? section.coach : "Нет тренера" }}</p>
+          <p>Тренер: {{ section.coach ? section.coach.lastName + " " + section.coach.firstName + " " + section.coach.middleName : "Нет тренера" }}</p>
           <p>Свободных мест: {{ section.capacity - section.sportsmen.length }}</p>
         </div>
         <hr>
@@ -176,11 +176,47 @@ export default {
       } catch (error) {
         alert("Ошибка:" + error);
       }
+    },
+    async fetchSectionCoaches() {
+      const query = `
+      query {
+        getAllSportSectionCoaches {
+          getSection {
+            id
+          }
+          getCoach {
+            id
+            lastName
+            firstName
+            middleName
+          }
+        }
+      }
+    `;
+      try {
+        const response = await fetch("http://localhost:8000/graphql/", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ query }),
+        });
+        const result = await response.json();
+        const coachMap = {};
+        result.data.getAllSportSectionCoaches.forEach(item => {
+          coachMap[item.getSection.id] = item.getCoach;
+        });
+        this.sections = this.sections.map(section => ({
+          ...section,
+          coach: coachMap[section.id] || null
+        }));
+      } catch (error) {
+        alert("Ошибка при загрузке тренеров: " + error);
+      }
     }
   },
     mounted() {
       this.fetchSections();
       this.fetchSportsmen();
+      this.fetchSectionCoaches();
     },
 };
 </script>

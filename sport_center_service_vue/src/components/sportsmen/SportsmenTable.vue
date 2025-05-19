@@ -1,7 +1,6 @@
 <template>
   <div>
     <h2>Список всех спортсменов спортивной школы олимпийского резерва №1</h2>
-    <SportsmenAddNew />
     <table>
       <thead>
       <tr>
