@@ -1,0 +1,9 @@
+fastapi~=0.115.12
+SQLAlchemy~=2.0.40
+ariadne~=0.26.1
+strawberry-graphql[fastapi]~=0.265.1
+psycopg2~=2.9.10
+dotenv~=0.9.9
+python-dotenv~=1.1.0
+starlette~=0.46.2
+passlib~=1.7.4
