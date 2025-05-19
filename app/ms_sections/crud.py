@@ -63,6 +63,10 @@ def delete_sport_section(db: Session, section_id: int) -> bool:
     return True
 
 
+def get_all_sport_section_coaches(db: Session) -> list[SportSectionCoach]:
+    return db.query(SportSectionCoach).all()
+
+
 def create_sport_section_coach(db: Session, section_coach_data: dict) -> SportSectionCoach:
     section_coach = SportSectionCoach(**section_coach_data)
     db.add(section_coach)

@@ -79,6 +79,24 @@ class CoachSportsmenMutation:
             registration_date=sportsman.registration_date,
         )
 
+    @strawberry.mutation()
+    def update_sportsmen(self, info: Info, sportsmen_id: int, first_name: str | None = None,
+                         last_name: str | None = None, middle_name: str | None = None, date_of_birth: date | None = None,
+                         gender: str | None = None, phone_number: str | None = None, email: str | None = None,
+                         registration_date: date | None = None) -> SportsmanType:
+        db = info.context["db"]
+        sportsman = crud.update_sportsmen(db, sportsmen_id, first_name, last_name, middle_name,
+                                          date_of_birth, gender, phone_number, email, registration_date)
+        return SportsmanType(id=sportsman.id,
+                             last_name=sportsman.last_name,
+                             first_name=sportsman.first_name,
+                             middle_name=sportsman.middle_name,
+                             gender=sportsman.gender,
+                             date_of_birth=sportsman.date_of_birth,
+                             phone_number=sportsman.phone_number,
+                             email=sportsman.email,
+                             registration_date=sportsman.registration_date)
+
 
 @strawberry.type
 class CoachSportsmenQuery:

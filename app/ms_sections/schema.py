@@ -35,6 +35,29 @@ class SportSectionQuery:
                                                          phone_number=s.phone_number, email=s.email,
                                                          registration_date=s.registration_date) for s in section.sportsmen])
 
+    @strawberry.field()
+    def add_new_sportsman_to_section(self, info: Info, section_id: int, sportsman_id: int) -> SportSectionType:
+        db = info.context["db"]
+        section = crud.add_sportsman_to_section(db, section_id, sportsman_id)
+        return SportSectionType(
+            id=section.id,
+            title=section.title,
+            sport=SportType(id=section.sport.id, name=section.sport.name, type=section.sport.type),
+            description=section.description,
+            capacity=section.capacity,
+            sportsmen=[SportsmanType(id=s.id, last_name=s.last_name, first_name=s.first_name,
+                                     middle_name=s.middle_name, gender=s.gender, date_of_birth=s.date_of_birth,
+                                     phone_number=s.phone_number, email=s.email,
+                                     registration_date=s.registration_date) for s in section.sportsmen])
+
+    @strawberry.field()
+    def delete_sportsman_from_section(self, info: Info, section_id: int, sportsman_id: int) -> str:
+        db = info.context["db"]
+        section = crud.remove_sportsman_from_section(db, section_id, sportsman_id)
+        if section:
+            return "Спортсмен успешно удален из секции"
+        return "Ошибка при удалении спортсмена"
+
 
 @strawberry.type
 class SportSectionMutation:
@@ -74,49 +97,20 @@ class SportSectionMutation:
 @strawberry.type
 class SportSectionCoachesQuery:
     @strawberry.field()
-    def get_all_sport_sections(self, info: Info) -> List[SportSectionType]:
+    def get_all_sport_section_coaches(self, info: Info) -> List[SportSectionCoachType]:
         db = info.context["db"]
-        return crud.get_all_sport_sections(db)
+        section_coaches = crud.get_all_sport_section_coaches(db)
+        return [
+            SportSectionCoachType(
+                id=section_coach.id,
+                coach=section_coach.coach_id,
+                section=section_coach.section_id,
+                start=section_coach.start,
+                end=section_coach.end,
+            )
+            for section_coach in section_coaches
+        ]
 
-    @strawberry.field()
-    def find_sport_section_by_id(self, info: Info, section_id: int) -> SportSectionType:
-        db = info.context["db"]
-        section = crud.get_sport_section_by_id(db, section_id)
-        if not section:
-            raise Exception("Секция не найдена")
-        return SportSectionType(
-            id=section.id,
-            title=section.title,
-            sport=SportType(id=section.sport.id, name=section.sport.name, type=section.sport.type),
-            description=section.description,
-            capacity=section.capacity,
-            sportsmen=[SportsmanType(id=s.id, last_name=s.last_name, first_name=s.first_name,
-                                                         middle_name=s.middle_name, gender=s.gender, date_of_birth=s.date_of_birth,
-                                                         phone_number=s.phone_number, email=s.email,
-                                                         registration_date=s.registration_date) for s in section.sportsmen])
-
-    @strawberry.field()
-    def add_new_sportsman_to_section(self, info: Info, section_id: int, sportsman_id: int) -> SportSectionType:
-        db = info.context["db"]
-        section = crud.add_sportsman_to_section(db, section_id, sportsman_id)
-        return SportSectionType(
-            id=section.id,
-            title=section.title,
-            sport=SportType(id=section.sport.id, name=section.sport.name, type=section.sport.type),
-            description=section.description,
-            capacity=section.capacity,
-            sportsmen=[SportsmanType(id=s.id, last_name=s.last_name, first_name=s.first_name,
-                                                         middle_name=s.middle_name, gender=s.gender, date_of_birth=s.date_of_birth,
-                                                         phone_number=s.phone_number, email=s.email,
-                                                         registration_date=s.registration_date) for s in section.sportsmen])
-
-    @strawberry.field()
-    def delete_sportsman_from_section(self, info: Info, section_id: int, sportsman_id: int) -> str:
-        db = info.context["db"]
-        section = crud.remove_sportsman_from_section(db, section_id, sportsman_id)
-        if section:
-            return "Спортсмен успешно удален из секции"
-        return "Ошибка при удалении спортсмена"
 
 
 @strawberry.type

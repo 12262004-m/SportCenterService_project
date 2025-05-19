@@ -3,9 +3,7 @@ import datetime
 from strawberry.types import Info
 from app.ms_schedule import crud
 from app.ms_schedule.enums import GraphQLWeekdayEnum
-from app.ms_schedule.models import Schedule
 from app.ms_schedule.types import ScheduleType
-import time
 
 
 @strawberry.type
@@ -39,3 +37,20 @@ class ScheduleMutation:
         )
 
 
+@strawberry.type
+class ScheduleQuery:
+    @strawberry.field()
+    def all_schedule(self, info: Info) -> list[ScheduleType]:
+        db = info.context["db"]
+        schedules = crud.get_full_schedule(db)
+        return [
+            ScheduleType(
+                id=schedule.id,
+                section=schedule.section_id,
+                hall=schedule.hall_id,
+                weekday=schedule.weekday,
+                start=schedule.start,
+                end=schedule.end,
+            )
+            for schedule in schedules
+        ]
